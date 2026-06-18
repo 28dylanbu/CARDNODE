@@ -1,0 +1,12 @@
+{
+  "users": [
+    {
+      "id": "Q656Q_CUW8o",
+      "name": "Testeo",
+      "email": "testeo@ejemplo.com",
+      "role": "student",
+      "createdAt": "2026-06-18T20:05:18.600Z"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

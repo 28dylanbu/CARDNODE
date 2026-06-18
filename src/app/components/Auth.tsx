@@ -34,7 +34,7 @@ export default function Auth() {
     confirmPassword: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (activeTab === 'register') {
@@ -50,12 +50,32 @@ export default function Auth() {
 
     // Create user with role detection
     const user = createUser(
-      formData.name || formData.email.split('@')[0],
-      formData.email,
-      formData.password
+        formData.name || formData.email.split('@')[0],
+        formData.email,
+        formData.password
     );
 
-    // Save authentication
+    // --- AQUÍ ENTRA TU NUEVO CÓDIGO ---
+    // Solo guardamos en el JSON si el usuario se está registrando
+    if (activeTab === 'register') {
+      try {
+        await fetch('http://localhost:3000/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(user) // Guardamos el objeto user que se acaba de crear
+        });
+        console.log('Usuario guardado exitosamente en usuarios.json');
+      } catch (error) {
+        console.error('Error al guardar el usuario en json-server:', error);
+        alert('Hubo un problema al conectar con la base de datos local.');
+        return; // Detenemos la ejecución si falla la base de datos
+      }
+    }
+    // -----------------------------------
+
+    // Save authentication (MANTENEMOS ESTO)
     localStorage.setItem('isAuthenticated', 'true');
     localStorage.setItem('userName', user.name);
     setCurrentUser(user);

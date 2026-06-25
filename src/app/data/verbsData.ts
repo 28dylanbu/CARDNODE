@@ -1,3 +1,4 @@
+import { getCurrentUser } from '../utils/auth';
 export interface Verb {
   id: number;
   infinitive: string;
@@ -229,7 +230,26 @@ export const saveProgress = (progress: VerbProgress[]) => {
   localStorage.setItem('verbProgress', JSON.stringify(progress));
 };
 
-export const loadProgress = (): VerbProgress[] => {
-  const saved = localStorage.getItem('verbProgress');
-  return saved ? JSON.parse(saved) : getInitialProgress();
+export const loadProgress = () => {
+  const user = getCurrentUser();
+
+  // Si no hay usuario logueado, devolvemos un historial vacío
+  if (!user) return [];
+
+  // Buscamos el progreso ESPECÍFICO de este correo en el almacenamiento
+  const storedProgress = localStorage.getItem(`progress_${user.email}`);
+
+  // Si el usuario ya tiene progreso guardado, lo cargamos
+  if (storedProgress) {
+    return JSON.parse(storedProgress);
+  }
+
+  // Si es un USUARIO NUEVO (storedProgress es null),
+  // le creamos un historial limpio (todo en 0) basado en la cantidad de verbos
+  return verbs.map(verb => ({
+    verbId: verb.id,
+    attempts: 0,
+    correctAttempts: 0,
+    mastered: false
+  }));
 };

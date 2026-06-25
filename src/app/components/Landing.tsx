@@ -68,17 +68,17 @@ export default function Landing() {
           {/* CTA Buttons */}
           <div className="flex gap-6 justify-center mb-16">
             <button
-              onClick={handleRegister}
-              className="px-10 py-5 bg-[#6FCF97] hover:bg-[#5EBF87] text-[#12131C] rounded-xl transition-all flex items-center gap-3 shadow-lg hover:shadow-xl hover:scale-105 transform"
-            >
-              <span className="text-lg">Sign Up</span>
-              <ArrowRight className="w-6 h-6" />
-            </button>
-            <button
               onClick={handleLogin}
               className="px-10 py-5 bg-[#1C1E2B] hover:bg-[#22243A] border-2 border-white/10 hover:border-[#6FCF97]/50 rounded-xl transition-all flex items-center gap-3"
             >
               <span className="text-lg">Sign In</span>
+            </button>
+            <button
+                onClick={handleRegister}
+                className="px-10 py-5 bg-[#6FCF97] hover:bg-[#5EBF87] text-[#12131C] rounded-xl transition-all flex items-center gap-3 shadow-lg hover:shadow-xl hover:scale-105 transform"
+            >
+              <span className="text-lg">Sign Up</span>
+              <ArrowRight className="w-6 h-6" />
             </button>
           </div>
 

@@ -4,7 +4,7 @@
       "id": "admin-principal",
       "name": "Admin",
       "email": "admin@admin.com",
-      "password": "admin12",
+      "password": "admin123",
       "role": "admin",
       "createdAt": "2026-06-25T16:04:36.853Z",
       "stats": {
@@ -21,6 +21,20 @@
       "password": "123456",
       "role": "student",
       "createdAt": "2026-06-25T17:56:59.441Z",
+      "stats": {
+        "flashcardsAttempts": 0,
+        "flashcardsFailed": [],
+        "constructorAttempts": 0,
+        "constructorFailed": []
+      }
+    },
+    {
+      "id": "3jmb3ct2Qj0",
+      "name": "xd",
+      "email": "papugod@gmail.com",
+      "password": "123456",
+      "role": "student",
+      "createdAt": "2026-06-25T18:22:19.680Z",
       "stats": {
         "flashcardsAttempts": 0,
         "flashcardsFailed": [],

@@ -22,10 +22,10 @@ export default function ProgressScreen() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <button
-            onClick={() => navigate('/educational-home')}
+            onClick={() => navigate('/dashboard')}
             className="bg-[#1C1E2B] hover:bg-[#2A2D3E] p-4 rounded-2xl border-2 border-white/10 transition-all"
           >
-            <Home className="w-8 h-8 text-white" />
+            <Home className="w-7 h-7 text-white" />
           </button>
 
           <div className="bg-[#1C1E2B] rounded-2xl px-8 py-4 border-2 border-white/10">

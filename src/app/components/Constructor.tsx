@@ -2,8 +2,16 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Home, Trophy, RotateCcw, Check, ArrowRight, X, Award, TrendingUp, Star, Play } from 'lucide-react';
+import { Home, Trophy, Volume2, RotateCcw, Check, ArrowRight, X, Award, TrendingUp, Star, Play } from 'lucide-react';
 import { verbs } from '../data/verbsData';
+
+const playAudio = (text: string) => {
+  if (!text) return;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-US';
+  utterance.rate = 0.8;
+  window.speechSynthesis.speak(utterance);
+};
 
 interface DraggableWordProps {
   word: string;
@@ -87,9 +95,19 @@ const DropZone = ({ tense, label, tenseForm, color, words, onDrop, onRemove, dis
           )}
         </div>
         {words.length > 0 && (
-          <div className={`mt-2 text-xs font-semibold ${color.text} opacity-70`}>
-            {words.join(' ')}
-          </div>
+            <div className={`mt-2 flex items-center gap-2 text-xs font-semibold ${color.text} opacity-80`}>
+              {/* Nuevo mini-botón de audio */}
+              <button
+                  onClick={() => playAudio(words.join(' '))}
+                  className="p-1 rounded-md hover:bg-black/10 transition-colors"
+                  title="Escuchar"
+              >
+                <Volume2 className="w-4 h-4" />
+              </button>
+              {/* Oraciones construyendose... */}
+              <span>{words.join(' ')}</span>
+
+            </div>
         )}
       </div>
     </div>
@@ -330,9 +348,9 @@ function ConstructorContent() {
         {/* Buttons */}
         <div className="grid grid-cols-3 gap-4 mt-6">
           <button
-            onClick={handleReset}
-            disabled={showFeedback}
-            className="bg-[#1C1E2B] hover:bg-[#2A2D3E] text-white font-black text-lg py-5 rounded-2xl border-4 border-white/10 hover:border-red-500/50 shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+              onClick={handleReset}
+              disabled={showFeedback}
+              className="bg-[#1C1E2B] hover:bg-[#2A2D3E] text-white font-black text-lg py-5 rounded-2xl border-4 border-white/10 hover:border-red-500/50 shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <RotateCcw className="w-6 h-6" />
             RESET

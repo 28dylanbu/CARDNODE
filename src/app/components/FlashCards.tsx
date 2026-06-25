@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Volume2, Check, ArrowRight, Home, Trophy, X, Award, TrendingUp, Star, Play } from 'lucide-react';
 import { verbs, loadProgress, saveProgress, VerbProgress } from '../data/verbsData';
@@ -60,7 +60,7 @@ export default function FlashCards() {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !showFeedback && userAnswer.trim()) {
       handleVerify();
     }

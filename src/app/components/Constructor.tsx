@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FC } from 'react';
 import { useNavigate } from 'react-router';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -30,7 +30,7 @@ interface DropZoneProps {
   disabled: boolean;
 }
 
-const DraggableWord = ({ word, index, fromZone }: DraggableWordProps) => {
+const DraggableWord: FC<DraggableWordProps> = ({ word, index, fromZone }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'word',
     item: { word, fromZone, index },
@@ -126,16 +126,49 @@ function ConstructorContent() {
   const currentVerb = verbs[currentIndex];
 
   useEffect(() => {
-    const words = [...new Set([
-      ...currentVerb.examplePresent,
-      ...currentVerb.examplePast,
-      ...currentVerb.exampleFuture,
-    ])];
-    const shuffled = [...words];
+    // 1. Juntar todos los arreglos de ejemplo
+    const arraysDePalabras = [
+      currentVerb.examplePresent,
+      currentVerb.examplePast,
+      currentVerb.exampleFuture
+    ];
+
+    const todasLasPalabras: string[] = [];
+    for (let i = 0; i < arraysDePalabras.length; i++) {
+      for (let j = 0; j < arraysDePalabras[i].length; j++) {
+        todasLasPalabras.push(arraysDePalabras[i][j]);
+      }
+    }
+
+    // 2. Eliminar las palabras duplicadas usando lógica básica
+    const palabrasSinDuplicados: string[] = [];
+    for (let i = 0; i < todasLasPalabras.length; i++) {
+      let existe = false;
+      for (let j = 0; j < palabrasSinDuplicados.length; j++) {
+        if (todasLasPalabras[i] === palabrasSinDuplicados[j]) {
+          existe = true;
+          break;
+        }
+      }
+      if (!existe) {
+        palabrasSinDuplicados.push(todasLasPalabras[i]);
+      }
+    }
+
+    // 3. Copiar el arreglo limpio para mezclarlo
+    const shuffled: string[] = [];
+    for (let i = 0; i < palabrasSinDuplicados.length; i++) {
+      shuffled.push(palabrasSinDuplicados[i]);
+    }
+
+    // 4. Mezclar las palabras aleatoriamente (Algoritmo Fisher-Yates clásico)
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      const temp = shuffled[i];
+      shuffled[i] = shuffled[j];
+      shuffled[j] = temp;
     }
+
     setShuffledWords(shuffled);
     setPresentSentence([]);
     setPastSentence([]);
@@ -303,7 +336,6 @@ function ConstructorContent() {
                       alt={currentVerb.infinitive}
                       className="w-full h-full object-cover"
                   />
-                  {/* Degradado y texto eliminados de aquí */}
                 </div>
                 <p className="text-center text-gray-400 font-bold mt-6 uppercase tracking-widest text-sm">
                   Target Verb

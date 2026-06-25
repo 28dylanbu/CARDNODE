@@ -1,25 +1,12 @@
 {
   "users": [
     {
-      "id": "Q656Q_CUW8o",
-      "name": "Testeo",
-      "email": "testeo@ejemplo.com",
-      "role": "student",
-      "createdAt": "2026-06-18T20:05:18.600Z"
-    },
-    {
-      "id": "cabtQ4Bammo",
+      "id": "vSTdk-igg5g",
       "name": "test",
-      "email": "test@ejemplo.com",
+      "email": "test@test.com",
+      "password": "123456",
       "role": "student",
-      "createdAt": "2026-06-18T21:01:51.723Z"
-    },
-    {
-      "id": "ulBx5WBA1uI",
-      "name": "prueba",
-      "email": "prueba@ejemplo.com",
-      "role": "student",
-      "createdAt": "2026-06-18T21:09:05.454Z"
+      "createdAt": "2026-06-25T16:04:36.853Z"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

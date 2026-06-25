@@ -225,9 +225,6 @@ export default function FlashCards() {
                       <div className="text-2xl font-black text-red-700">
                         Try again 💪
                       </div>
-                      <div className="text-lg text-red-600">
-                        The correct answer is: <span className="font-bold">{currentVerb.infinitive}</span>
-                      </div>
                     </div>
                   </>
                 )}

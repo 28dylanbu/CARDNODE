@@ -320,13 +320,6 @@ function ConstructorContent() {
                     <div className={`text-xl font-black ${isCorrect ? 'text-green-700' : 'text-red-700'}`}>
                       {isCorrect ? 'All sentences correct! 🎉' : 'Not quite — check the order and try again 💪'}
                     </div>
-                    {!isCorrect && (
-                      <div className="text-sm mt-1 space-y-0.5 text-gray-600">
-                        <div>Present: <span className="font-bold">{currentVerb.examplePresent.join(' ')}</span></div>
-                        <div>Past: <span className="font-bold">{currentVerb.examplePast.join(' ')}</span></div>
-                        <div>Future: <span className="font-bold">{currentVerb.exampleFuture.join(' ')}</span></div>
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>

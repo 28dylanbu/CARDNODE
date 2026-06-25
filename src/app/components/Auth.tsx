@@ -55,7 +55,7 @@ export default function Auth() {
         formData.password
     );
 
-    // --- AQUÍ ENTRA TU NUEVO CÓDIGO ---
+
     // Solo guardamos en el JSON si el usuario se está registrando
     if (activeTab === 'register') {
       try {

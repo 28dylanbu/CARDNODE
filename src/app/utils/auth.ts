@@ -47,6 +47,7 @@ export const createUser = (name: string, email: string, password: string): User 
     id: Date.now().toString(),
     name,
     email,
+    password,
     role: isAdminUser ? 'admin' : 'student',
     createdAt: new Date(),
   };

@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { Shield, Edit, Plus, LogOut, User, TrendingUp, BookOpen, Search } from 'lucide-react';
+import { Shield, Edit, Plus, LogOut, User, TrendingUp, BookOpen, Search, Users, Activity, Calendar } from 'lucide-react';
 import { getCurrentUser, logout } from '../utils/auth';
 import { verbs } from '../data/verbsData';
 
@@ -8,6 +8,20 @@ export default function AdminPanel() {
   const navigate = useNavigate();
   const user = getCurrentUser();
   const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState<'verbs' | 'users'>('verbs');
+  const [usersList, setUsersList] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (activeTab === 'users') {
+      fetch('http://localhost:5000/usuarios')
+          .then(res => res.json())
+          .then(data => {
+            const userArray = Array.isArray(data) ? data : (data.usuarios || []);
+            setUsersList(userArray);
+          })
+          .catch(err => console.error("Error al obtener usuarios:", err));
+    }
+  }, [activeTab]);
 
   if (!user || user.role !== 'admin') {
     navigate('/dashboard');
@@ -20,177 +34,116 @@ export default function AdminPanel() {
   };
 
   const filteredVerbs = verbs.filter(
-    (verb) =>
-      verb.infinitive.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      verb.spanish.toLowerCase().includes(searchTerm.toLowerCase())
+      (verb) =>
+          verb.infinitive.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 ||
+          verb.spanish.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1e293b] to-[#0f172a] p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-xl bg-blue-500 flex items-center justify-center">
-              <Shield className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-white text-3xl font-black">Admin Panel</h1>
-              <p className="text-gray-400">Manage application content</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate('/profile')}
-              className="flex items-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl border border-white/20 transition-all"
-            >
-              <User className="w-5 h-5 text-white" />
-              <span className="text-white font-bold">{user.name}</span>
-            </button>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-3 px-6 py-3 bg-red-500/80 hover:bg-red-600 rounded-xl border border-white/20 transition-all"
-            >
-              <LogOut className="w-5 h-5 text-white" />
-              <span className="text-white font-bold">Sign Out</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-6 mb-8">
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-            <div className="flex items-center gap-4">
-              <BookOpen className="w-12 h-12 text-blue-400" />
-              <div>
-                <div className="text-white text-3xl font-black">{verbs.length}</div>
-                <div className="text-gray-400 font-bold">Total Verbs</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-            <div className="flex items-center gap-4">
-              <TrendingUp className="w-12 h-12 text-green-400" />
-              <div>
-                <div className="text-white text-3xl font-black">100%</div>
-                <div className="text-gray-400 font-bold">System Active</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-            <div className="flex items-center gap-4">
-              <User className="w-12 h-12 text-purple-400" />
-              <div>
-                <div className="text-white text-3xl font-black">Admin</div>
-                <div className="text-gray-400 font-bold">Full Access</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-          {/* Header with Search and Add */}
+      <div className="min-h-screen bg-gradient-to-br from-[#1e293b] to-[#0f172a] p-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-black text-white">Flash Cards Management</h2>
             <div className="flex items-center gap-4">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search verb..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 transition-all w-80"
-                />
+              <div className="w-16 h-16 rounded-xl bg-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                <Shield className="w-8 h-8 text-white" />
               </div>
-              <button
-                onClick={() => navigate('/admin/verb/new')}
-                className="flex items-center gap-3 px-6 py-3 bg-green-500 hover:bg-green-600 rounded-xl border border-white/20 transition-all"
-              >
-                <Plus className="w-5 h-5 text-white" />
-                <span className="text-white font-bold">Add New</span>
+              <div>
+                <h1 className="text-white text-3xl font-black">Admin Panel</h1>
+                <p className="text-gray-400">Manage application content & users</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <button onClick={() => navigate('/profile')} className="flex items-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl border border-white/20 transition-all">
+                <User className="w-5 h-5 text-white" />
+                <span className="text-white font-bold">{user.name}</span>
+              </button>
+              <button onClick={handleLogout} className="flex items-center gap-3 px-6 py-3 bg-red-500/80 hover:bg-red-600 rounded-xl border border-white/20 transition-all shadow-lg shadow-red-500/20">
+                <LogOut className="w-5 h-5 text-white" />
+                <span className="text-white font-bold">Sign Out</span>
               </button>
             </div>
           </div>
 
-          {/* Verbs List */}
-          <div className="space-y-4 max-h-[600px] overflow-y-auto pr-4">
-            {filteredVerbs.map((verb) => (
-              <div
-                key={verb.id}
-                className="bg-white/5 hover:bg-white/10 rounded-xl p-6 border border-white/10 hover:border-white/30 transition-all group"
-              >
-                <div className="flex items-center gap-6">
-                  {/* Image */}
-                  <div className="w-32 h-32 rounded-xl overflow-hidden border-2 border-white/20 flex-shrink-0">
-                    <img
-                      src={verb.imageUrl}
-                      alt={verb.infinitive}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-
-                  {/* Info */}
-                  <div className="flex-1">
-                    <div className="flex items-center gap-4 mb-3">
-                      <h3 className="text-2xl font-black text-white">{verb.infinitive}</h3>
-                      <span className="px-4 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm font-bold border border-blue-400/30">
-                        ID: {verb.id}
-                      </span>
-                    </div>
-                    <p className="text-gray-400 text-lg mb-3">
-                      Spanish: <span className="text-white font-bold">{verb.spanish}</span>
-                    </p>
-                    <div className="flex gap-4 text-sm">
-                      <span className="text-gray-400">
-                        Present: <span className="text-green-400 font-bold">{verb.present}</span>
-                      </span>
-                      <span className="text-gray-400">
-                        Past: <span className="text-yellow-400 font-bold">{verb.past}</span>
-                      </span>
-                      <span className="text-gray-400">
-                        Future: <span className="text-purple-400 font-bold">{verb.future}</span>
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <button
-                    onClick={() => navigate(`/admin/verb/${verb.id}`)}
-                    className="flex items-center gap-3 px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-xl transition-all opacity-0 group-hover:opacity-100"
-                  >
-                    <Edit className="w-5 h-5 text-white" />
-                    <span className="text-white font-bold">Edit</span>
-                  </button>
-                </div>
-              </div>
-            ))}
+          {/* Tabs */}
+          <div className="flex gap-4 mb-6 border-b border-white/10 pb-4 mt-8">
+            <button
+                onClick={() => setActiveTab('verbs')}
+                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${
+                    activeTab === 'verbs' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                }`}
+            >
+              <BookOpen className="w-5 h-5" /> Flash Cards Management
+            </button>
+            <button
+                onClick={() => setActiveTab('users')}
+                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${
+                    activeTab === 'users' ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/20' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                }`}
+            >
+              <Activity className="w-5 h-5" /> User Statistics
+            </button>
           </div>
 
-          {filteredVerbs.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-400 text-lg">
-                No verbs found for "{searchTerm}"
-              </p>
-            </div>
-          )}
-        </div>
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+            {activeTab === 'verbs' && (
+                <>
+                  <div className="flex items-center justify-between mb-8">
+                    <h2 className="text-2xl font-black text-white">Flash Cards Database</h2>
+                    <div className="relative">
+                      <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input type="text" placeholder="Search verb..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-12 pr-4 py-3 bg-[#0f172a] border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none w-80" />
+                    </div>
+                  </div>
 
-        {/* Instructions */}
-        <div className="mt-8 bg-blue-500/10 backdrop-blur-sm rounded-2xl p-6 border border-blue-400/30">
-          <h3 className="text-blue-300 font-black text-lg mb-3">💡 Instructions</h3>
-          <ul className="text-gray-300 space-y-2">
-            <li>• Click "Edit" to modify an existing verb</li>
-            <li>• Use "Add New" to create a new flash card</li>
-            <li>• Search works in English and Spanish</li>
-            <li>• Changes are automatically saved in the browser</li>
-          </ul>
+                  <div className="space-y-4 max-h-[500px] overflow-y-auto pr-4">
+                    {filteredVerbs.map((verb) => (
+                        <div key={verb.id} className="bg-[#0f172a]/50 rounded-xl p-6 border border-white/5 transition-all group flex items-center gap-6">
+                          <div className="w-24 h-24 rounded-xl overflow-hidden border-2 border-white/10"><img src={verb.imageUrl} alt={verb.infinitive} className="w-full h-full object-cover" /></div>
+                          <div className="flex-1">
+                            <h3 className="text-2xl font-black text-white">{verb.infinitive}</h3>
+                            <p className="text-gray-400">Spanish: {verb.spanish}</p>
+                          </div>
+                          <button onClick={() => navigate(`/admin/verb/${verb.id}`)} className="bg-blue-500 text-white font-bold px-6 py-3 rounded-xl"><Edit className="w-4 h-4" /> Edit</button>
+                        </div>
+                    ))}
+                  </div>
+                </>
+            )}
+
+            {activeTab === 'users' && (
+                <>
+                  <div className="grid grid-cols-4 gap-4 px-6 py-3 text-gray-400 font-bold text-xs uppercase tracking-wider border-b border-white/10 mb-4">
+                    <div>User details</div>
+                    <div>Role</div>
+                    <div>Flashcards (Success)</div>
+                    <div>Sentences (Success)</div>
+                  </div>
+
+                  <div className="space-y-3 max-h-[500px] overflow-y-auto pr-4">
+                    {usersList.map((u) => {
+                      const stats = u.stats || { flashcardsAttempts: 0, flashcardsFailed: [], constructorAttempts: 0, constructorFailed: [] };
+                      const fRate = stats.flashcardsAttempts > 0 ? Math.max(0, Math.round(((stats.flashcardsAttempts - stats.flashcardsFailed.length) / stats.flashcardsAttempts) * 100)) : 0;
+                      const cRate = stats.constructorAttempts > 0 ? Math.max(0, Math.round(((stats.constructorAttempts - stats.constructorFailed.length) / stats.constructorAttempts) * 100)) : 0;
+
+                      return (
+                          <div key={u.id} className="grid grid-cols-4 gap-4 items-center bg-[#0f172a]/50 rounded-xl p-5 border border-white/5">
+                            <div className="flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center"><User className="w-5 h-5 text-purple-300" /></div>
+                              <div><p className="text-white font-bold">{u.name}</p><p className="text-gray-500 text-xs">{u.email}</p></div>
+                            </div>
+                            <div><span className={`px-3 py-1 rounded-full text-xs font-bold ${u.role === 'admin' ? 'bg-red-500/20 text-red-300' : 'bg-blue-500/20 text-blue-300'}`}>{u.role.toUpperCase()}</span></div>
+                            <div><div className="text-2xl font-black text-white">{fRate}%</div><div className="text-gray-400 text-xs">{stats.flashcardsAttempts} total attempts</div></div>
+                            <div><div className="text-2xl font-black text-white">{cRate}%</div><div className="text-gray-400 text-xs">{stats.constructorAttempts} total attempts</div></div>
+                          </div>
+                      );
+                    })}
+                  </div>
+                </>
+            )}
+          </div>
         </div>
       </div>
-    </div>
   );
 }

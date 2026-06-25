@@ -1,12 +1,32 @@
 {
-  "users": [
+  "usuarios": [
     {
-      "id": "vSTdk-igg5g",
-      "name": "test",
-      "email": "test@test.com",
+      "id": "admin-principal",
+      "name": "Admin",
+      "email": "admin@admin.com",
+      "password": "admin12",
+      "role": "admin",
+      "createdAt": "2026-06-25T16:04:36.853Z",
+      "stats": {
+        "flashcardsAttempts": 0,
+        "flashcardsFailed": [],
+        "constructorAttempts": 0,
+        "constructorFailed": []
+      }
+    },
+    {
+      "id": "MvBynTOe-4M",
+      "name": "Miguel",
+      "email": "ard@dasdas",
       "password": "123456",
       "role": "student",
-      "createdAt": "2026-06-25T16:04:36.853Z"
+      "createdAt": "2026-06-25T17:56:59.441Z",
+      "stats": {
+        "flashcardsAttempts": 0,
+        "flashcardsFailed": [],
+        "constructorAttempts": 0,
+        "constructorFailed": []
+      }
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

@@ -144,7 +144,7 @@ export default function FlashCards() {
   return (
       <div className="min-h-screen bg-[#12131C] p-6 md:p-8">
         <div className="max-w-6xl mx-auto">
-          {/* Header */}
+          {/* Header 1*/}
           <div className="flex items-center justify-between mb-8">
             <button
                 onClick={() => navigate('/dashboard')}

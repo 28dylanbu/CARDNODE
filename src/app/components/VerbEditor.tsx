@@ -14,7 +14,6 @@ export default function VerbEditor() {
 
   const [formData, setFormData] = useState({
     infinitive: existingVerb?.infinitive || '',
-    spanish: existingVerb?.spanish || '',
     imageUrl: existingVerb?.imageUrl || '',
     present: existingVerb?.present || '',
     past: existingVerb?.past || '',
@@ -25,6 +24,7 @@ export default function VerbEditor() {
   });
 
   const [saved, setSaved] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(existingVerb?.imageUrl || null);
 
   if (!user || user.role !== 'admin') {
     navigate('/dashboard');
@@ -34,6 +34,22 @@ export default function VerbEditor() {
   const handleChange = (field: string, value: string) => {
     setFormData({ ...formData, [field]: value });
     setSaved(false);
+  };
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file (jpg, png, jpeg).');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setImagePreview(base64String); // Muestra la foto en pantalla
+        handleChange('imageUrl', base64String); // Lo guarda en tu formData listo para la base de datos
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSave = () => {
@@ -51,7 +67,6 @@ export default function VerbEditor() {
   const isValid = () => {
     return (
       formData.infinitive.trim() &&
-      formData.spanish.trim() &&
       formData.imageUrl.trim() &&
       formData.present.trim() &&
       formData.past.trim() &&
@@ -116,54 +131,46 @@ export default function VerbEditor() {
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-400 transition-all"
                 />
               </div>
-
-              <div>
-                <label className="block text-gray-300 font-bold mb-2">Spanish Translation *</label>
-                <input
-                  type="text"
-                  value={formData.spanish}
-                  onChange={(e) => handleChange('spanish', e.target.value)}
-                  placeholder="comer, correr, nadar..."
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-400 transition-all"
-                />
-              </div>
             </div>
           </div>
 
           {/* Image */}
           <div className="mb-8">
             <h2 className="text-white text-2xl font-black mb-6">Image</h2>
-            <div className="grid grid-cols-3 gap-6 items-end">
-              <div className="col-span-2">
-                <label className="block text-gray-300 font-bold mb-2">Image URL *</label>
-                <input
-                  type="url"
-                  value={formData.imageUrl}
-                  onChange={(e) => handleChange('imageUrl', e.target.value)}
-                  placeholder="https://images.unsplash.com/photo-..."
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-400 transition-all"
-                />
-                <p className="text-gray-400 text-sm mt-2">
-                  💡 Recommendation: Use Unsplash images (800x600px or larger)
-                </p>
+            <div className="flex flex-col sm:flex-row items-center gap-8 p-6 bg-white/5 rounded-2xl border border-white/10">
+
+              {/* Caja de Previsualización */}
+              <div className="w-48 h-48 bg-[#0f172a] rounded-xl overflow-hidden flex items-center justify-center border-2 border-dashed border-white/30 relative flex-shrink-0 shadow-inner">
+                {imagePreview ? (
+                    <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                    />
+                ) : (
+                    <div className="flex flex-col items-center">
+                      <ImageIcon className="w-12 h-12 text-gray-500 mb-2" />
+                      <span className="text-gray-500 text-sm font-bold">No image</span>
+                    </div>
+                )}
               </div>
 
-              <div className="w-48 h-48 bg-white/5 border-2 border-white/20 rounded-xl overflow-hidden">
-                {formData.imageUrl ? (
-                  <img
-                    src={formData.imageUrl}
-                    alt="Preview"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = '';
-                      e.currentTarget.style.display = 'none';
-                    }}
+              {/* Botón Explorador de Archivos */}
+              <div className="flex-1 w-full">
+                <label className="block text-gray-300 font-bold mb-4">Upload Verb Image *</label>
+                <label className="cursor-pointer inline-flex items-center gap-3 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg shadow-blue-500/20">
+                  <ImageIcon className="w-5 h-5" />
+                  <span>Explorar archivos...</span>
+                  <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
                   />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <ImageIcon className="w-16 h-16 text-gray-600" />
-                  </div>
-                )}
+                </label>
+                <p className="text-gray-400 text-sm mt-4">
+                  💡 Selecciona una imagen de tu computadora. Se procesará y guardará automáticamente para que los estudiantes puedan verla al instante. Recomendación: Imágenes cuadradas.
+                </p>
               </div>
             </div>
           </div>

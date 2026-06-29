@@ -22,8 +22,15 @@
       "role": "student",
       "createdAt": "2026-06-25T17:56:59.441Z",
       "stats": {
-        "flashcardsAttempts": 0,
-        "flashcardsFailed": [],
+        "flashcardsAttempts": 48,
+        "flashcardsFailed": [
+          "eat",
+          "swim",
+          "read",
+          "write",
+          "sing",
+          "dance"
+        ],
         "constructorAttempts": 0,
         "constructorFailed": []
       }
@@ -35,6 +42,29 @@
       "password": "123456",
       "role": "student",
       "createdAt": "2026-06-25T18:22:19.680Z",
+      "stats": {
+        "flashcardsAttempts": 16,
+        "flashcardsFailed": [
+          "run",
+          "swim",
+          "read",
+          "sing",
+          "play",
+          "cook",
+          "study",
+          "sleep"
+        ],
+        "constructorAttempts": 0,
+        "constructorFailed": []
+      }
+    },
+    {
+      "id": "Q9zl5sFhIaY",
+      "name": "Mypupy",
+      "email": "admin@english.com",
+      "password": "elDylancito",
+      "role": "student",
+      "createdAt": "2026-06-25T18:53:57.593Z",
       "stats": {
         "flashcardsAttempts": 0,
         "flashcardsFailed": [],

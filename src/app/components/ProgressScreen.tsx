@@ -131,7 +131,6 @@ export default function ProgressScreen() {
                     >
                       <div>
                         <div className="font-black text-xl text-green-800">{verb.infinitive}</div>
-                        <div className="text-sm text-green-600">{verb.spanish}</div>
                       </div>
                       <div className="text-right">
                         <div className="text-green-700 font-bold">
@@ -173,7 +172,6 @@ export default function ProgressScreen() {
                     >
                       <div>
                         <div className="font-black text-xl text-orange-800">{verb.infinitive}</div>
-                        <div className="text-sm text-orange-600">{verb.spanish}</div>
                       </div>
                       <div className="text-right">
                         <div className="text-orange-700 font-bold">

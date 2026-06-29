@@ -2,7 +2,6 @@ import { getCurrentUser } from '../utils/auth';
 export interface Verb {
   id: number;
   infinitive: string;
-  spanish: string;
   imageUrl: string;
   present: string;
   past: string;
@@ -16,7 +15,6 @@ export const verbs: Verb[] = [
   {
     id: 1,
     infinitive: 'eat',
-    spanish: 'comer',
     imageUrl: '/images/eat.jpeg',
     present: 'eat/eats',
     past: 'ate',
@@ -28,7 +26,6 @@ export const verbs: Verb[] = [
   {
     id: 2,
     infinitive: 'run',
-    spanish: 'correr',
     imageUrl: '/images/run.jpeg',
     present: 'run/runs',
     past: 'ran',
@@ -40,7 +37,6 @@ export const verbs: Verb[] = [
   {
     id: 3,
     infinitive: 'swim',
-    spanish: 'nadar',
     imageUrl: '/images/swim.jpeg',
     present: 'swim/swims',
     past: 'swam',
@@ -52,7 +48,6 @@ export const verbs: Verb[] = [
   {
     id: 4,
     infinitive: 'read',
-    spanish: 'leer',
     imageUrl: '/images/read.jpeg',
     present: 'read/reads',
     past: 'read',
@@ -64,7 +59,6 @@ export const verbs: Verb[] = [
   {
     id: 5,
     infinitive: 'write',
-    spanish: 'escribir',
     imageUrl: '/images/write.jpeg',
     present: 'write/writes',
     past: 'wrote',
@@ -76,7 +70,6 @@ export const verbs: Verb[] = [
   {
     id: 6,
     infinitive: 'sing',
-    spanish: 'cantar',
     imageUrl: '/images/sing.jpeg',
     present: 'sing/sings',
     past: 'sang',
@@ -88,7 +81,6 @@ export const verbs: Verb[] = [
   {
     id: 7,
     infinitive: 'dance',
-    spanish: 'bailar',
     imageUrl: '/images/dance.jpeg',
     present: 'dance/dances',
     past: 'danced',
@@ -100,7 +92,6 @@ export const verbs: Verb[] = [
   {
     id: 8,
     infinitive: 'play',
-    spanish: 'jugar',
     imageUrl: '/images/play.jpeg',
     present: 'play/plays',
     past: 'played',
@@ -112,7 +103,6 @@ export const verbs: Verb[] = [
   {
     id: 9,
     infinitive: 'cook',
-    spanish: 'cocinar',
     imageUrl: '/images/cook.jpeg',
     present: 'cook/cooks',
     past: 'cooked',
@@ -124,7 +114,6 @@ export const verbs: Verb[] = [
   {
     id: 10,
     infinitive: 'study',
-    spanish: 'estudiar',
     imageUrl: '/images/study.jpeg',
     present: 'study/studies',
     past: 'studied',
@@ -136,7 +125,6 @@ export const verbs: Verb[] = [
   {
     id: 11,
     infinitive: 'jump',
-    spanish: 'saltar',
     imageUrl: '/images/jump.jpeg',
     present: 'jump/jumps',
     past: 'jumped',
@@ -148,7 +136,6 @@ export const verbs: Verb[] = [
   {
     id: 12,
     infinitive: 'sleep',
-    spanish: 'dormir',
     imageUrl: '/images/sleep.jpeg',
     present: 'sleep/sleeps',
     past: 'slept',
@@ -160,7 +147,6 @@ export const verbs: Verb[] = [
   {
     id: 13,
     infinitive: 'walk',
-    spanish: 'caminar',
     imageUrl: '/images/walk.jpeg',
     present: 'walk/walks',
     past: 'walked',
@@ -172,7 +158,6 @@ export const verbs: Verb[] = [
   {
     id: 14,
     infinitive: 'drive',
-    spanish: 'conducir',
     imageUrl: '/images/drive.jpeg',
     present: 'drive/drives',
     past: 'drove',
@@ -184,7 +169,6 @@ export const verbs: Verb[] = [
   {
     id: 15,
     infinitive: 'teach',
-    spanish: 'enseñar',
     imageUrl: '/images/teach.jpeg',
     present: 'teach/teaches',
     past: 'taught',
@@ -196,7 +180,6 @@ export const verbs: Verb[] = [
   {
     id: 16,
     infinitive: 'listen',
-    spanish: 'escuchar',
     imageUrl: '/images/listen.jpeg',
     present: 'listen/listens',
     past: 'listened',
@@ -227,7 +210,11 @@ export const getInitialProgress = (): VerbProgress[] => {
 };
 
 export const saveProgress = (progress: VerbProgress[]) => {
-  localStorage.setItem('verbProgress', JSON.stringify(progress));
+  const user = getCurrentUser();
+  if (user) {
+    // Guardamos usando la llave única, ej: progress_miguel@gmail.com
+    localStorage.setItem(`progress_${user.email}`, JSON.stringify(progress));
+  }
 };
 
 export const loadProgress = () => {

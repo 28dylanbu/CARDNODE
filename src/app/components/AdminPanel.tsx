@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { Shield, Edit, Plus, LogOut, User, TrendingUp, BookOpen, Search, Users, Activity, Calendar } from 'lucide-react';
+import { Shield, Edit, Plus, LogOut, User, BookOpen, Search, Activity, Calendar } from 'lucide-react';
 import { getCurrentUser, logout } from '../utils/auth';
 import { verbs } from '../data/verbsData';
 
@@ -91,13 +91,18 @@ export default function AdminPanel() {
                 <>
                   <div className="flex items-center justify-between mb-8">
                     <h2 className="text-2xl font-black text-white">Flash Cards Database</h2>
-                    <div className="relative">
-                      <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                      <input type="text" placeholder="Search verb..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-12 pr-4 py-3 bg-[#0f172a] border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none w-80" />
+                    <div className="flex items-center gap-4">
+                      <div className="relative">
+                        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                        <input type="text" placeholder="Search verb..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-12 pr-4 py-3 bg-[#0f172a] border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none w-80" />
+                      </div>
+                      <button onClick={() => navigate('/admin/verb/new')} className="flex items-center gap-2 bg-green-500 text-white font-bold px-6 py-3 rounded-xl hover:bg-green-600 transition-all">
+                        <Plus className="w-5 h-5" /> Add New
+                      </button>
                     </div>
                   </div>
 
-                  <div className="space-y-4 max-h-[500px] overflow-y-auto pr-4">
+                  <div className="space-y-4 max-h-[500px] overflow-y-auto pr-4 custom-scrollbar">
                     {filteredVerbs.map((verb) => (
                         <div key={verb.id} className="bg-[#0f172a]/50 rounded-xl p-6 border border-white/5 transition-all group flex items-center gap-6">
                           <div className="w-24 h-24 rounded-xl overflow-hidden border-2 border-white/10"><img src={verb.imageUrl} alt={verb.infinitive} className="w-full h-full object-cover" /></div>
@@ -105,7 +110,7 @@ export default function AdminPanel() {
                             <h3 className="text-2xl font-black text-white">{verb.infinitive}</h3>
                             <p className="text-gray-400">Spanish: {verb.spanish}</p>
                           </div>
-                          <button onClick={() => navigate(`/admin/verb/${verb.id}`)} className="bg-blue-500 text-white font-bold px-6 py-3 rounded-xl"><Edit className="w-4 h-4" /> Edit</button>
+                          <button onClick={() => navigate(`/admin/verb/${verb.id}`)} className="bg-blue-500 text-white font-bold px-6 py-3 rounded-xl group-hover:scale-105 transition-all"><Edit className="w-4 h-4" /> Edit</button>
                         </div>
                     ))}
                   </div>
@@ -121,24 +126,26 @@ export default function AdminPanel() {
                     <div>Sentences (Success)</div>
                   </div>
 
-                  <div className="space-y-3 max-h-[500px] overflow-y-auto pr-4">
-                    {usersList.map((u) => {
-                      const stats = u.stats || { flashcardsAttempts: 0, flashcardsFailed: [], constructorAttempts: 0, constructorFailed: [] };
-                      const fRate = stats.flashcardsAttempts > 0 ? Math.max(0, Math.round(((stats.flashcardsAttempts - stats.flashcardsFailed.length) / stats.flashcardsAttempts) * 100)) : 0;
-                      const cRate = stats.constructorAttempts > 0 ? Math.max(0, Math.round(((stats.constructorAttempts - stats.constructorFailed.length) / stats.constructorAttempts) * 100)) : 0;
+                  <div className="space-y-3 max-h-[500px] overflow-y-auto pr-4 custom-scrollbar">
+                    {usersList
+                        .filter((u) => u.role !== 'admin') // Filtro para ocultar al admin
+                        .map((u) => {
+                          const stats = u.stats || { flashcardsAttempts: 0, flashcardsFailed: [], constructorAttempts: 0, constructorFailed: [] };
+                          const fRate = stats.flashcardsAttempts > 0 ? Math.max(0, Math.round(((stats.flashcardsAttempts - stats.flashcardsFailed.length) / stats.flashcardsAttempts) * 100)) : 0;
+                          const cRate = stats.constructorAttempts > 0 ? Math.max(0, Math.round(((stats.constructorAttempts - stats.constructorFailed.length) / stats.constructorAttempts) * 100)) : 0;
 
-                      return (
-                          <div key={u.id} className="grid grid-cols-4 gap-4 items-center bg-[#0f172a]/50 rounded-xl p-5 border border-white/5">
-                            <div className="flex items-center gap-4">
-                              <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center"><User className="w-5 h-5 text-purple-300" /></div>
-                              <div><p className="text-white font-bold">{u.name}</p><p className="text-gray-500 text-xs">{u.email}</p></div>
-                            </div>
-                            <div><span className={`px-3 py-1 rounded-full text-xs font-bold ${u.role === 'admin' ? 'bg-red-500/20 text-red-300' : 'bg-blue-500/20 text-blue-300'}`}>{u.role.toUpperCase()}</span></div>
-                            <div><div className="text-2xl font-black text-white">{fRate}%</div><div className="text-gray-400 text-xs">{stats.flashcardsAttempts} total attempts</div></div>
-                            <div><div className="text-2xl font-black text-white">{cRate}%</div><div className="text-gray-400 text-xs">{stats.constructorAttempts} total attempts</div></div>
-                          </div>
-                      );
-                    })}
+                          return (
+                              <div key={u.id} className="grid grid-cols-4 gap-4 items-center bg-[#0f172a]/50 rounded-xl p-5 border border-white/5">
+                                <div className="flex items-center gap-4">
+                                  <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center"><User className="w-5 h-5 text-purple-300" /></div>
+                                  <div><p className="text-white font-bold">{u.name}</p><p className="text-gray-500 text-xs">{u.email}</p></div>
+                                </div>
+                                <div><span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-500/20 text-blue-300">{u.role.toUpperCase()}</span></div>
+                                <div><div className="text-2xl font-black text-white">{fRate}%</div><div className="text-gray-400 text-xs">{stats.flashcardsAttempts} total attempts</div></div>
+                                <div><div className="text-2xl font-black text-white">{cRate}%</div><div className="text-gray-400 text-xs">{stats.constructorAttempts} total attempts</div></div>
+                              </div>
+                          );
+                        })}
                   </div>
                 </>
             )}

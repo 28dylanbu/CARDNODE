@@ -82,25 +82,7 @@ export default function Auth() {
           });
 
     } else {
-      // --- INICIO DE SESIÓN (LOGIN) ---
-
-      // Fallback de seguridad local por si no se encuentra en el JSON
-      if (formData.email === 'admin@admin.com' && formData.password === '123456') {
-        const localAdmin = {
-          id: 'admin-local',
-          name: 'Admin Sistema',
-          email: 'admin@admin.com',
-          password: '123456',
-          role: 'admin',
-          createdAt: new Date().toISOString(),
-          stats: { flashcardsAttempts: 0, flashcardsFailed: [], constructorAttempts: 0, constructorFailed: [] }
-        };
-        localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('userName', localAdmin.name);
-        setCurrentUser(localAdmin as any);
-        navigate('/admin');
-        return;
-      }
+      // --- INICIO DE SESIÓN (LOGIN) como ADMIN ---
 
       fetch('http://localhost:5000/usuarios')
           .then(res => res.json())

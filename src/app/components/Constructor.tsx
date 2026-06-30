@@ -168,7 +168,7 @@ function ConstructorContent() {
       // --- GUARDAR ESTADÍSTICAS DEL CONSTRUCTOR ---
       const currentUser = getCurrentUser();
       if (currentUser && currentUser.id) {
-        fetch(`http://localhost:5000/usuarios/${currentUser.id}`)
+        fetch(`${import.meta.env.VITE_API_URL}/usuarios/${currentUser.id}`)
             .then(res => res.json())
             .then(userData => {
               const existingStats = userData.stats || { flashcardsAttempts: 0, flashcardsFailed: [], constructorAttempts: 0, constructorFailed: [] };
@@ -180,7 +180,7 @@ function ConstructorContent() {
                 constructorFailed: sessionFailedVerbs
               };
 
-              fetch(`http://localhost:5000/usuarios/${currentUser.id}`, {
+              fetch(`${import.meta.env.VITE_API_URL}/usuarios/${currentUser.id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ stats: newStats })

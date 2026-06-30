@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import { BookOpen, Play, TrendingUp, User, LogOut, Sparkles, Trophy, Target } from 'lucide-react';
 import { getCurrentUser, logout } from '../utils/auth';
-import { loadProgress } from '../data/verbsData';
+import { loadProgress, verbs } from '../data/verbsData';
 
 export default function MainDashboard() {
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ export default function MainDashboard() {
             <div className="flex items-center gap-4 mb-4">
               <Trophy className="w-10 h-10 text-[#6FCF97]" />
               <div>
-                <div className="text-white text-4xl font-black">{masteredCount}/16</div>
+                <div className="text-white text-4xl font-black">{masteredCount}/{verbs.length}</div>
                 <div className="text-white/80 font-bold">Mastered Verbs</div>
               </div>
             </div>

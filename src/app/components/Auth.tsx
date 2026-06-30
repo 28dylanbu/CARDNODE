@@ -63,7 +63,7 @@ export default function Auth() {
         }
       };
 
-      fetch('http://localhost:5000/usuarios', {
+      fetch(`${import.meta.env.VITE_API_URL}/usuarios`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -84,7 +84,7 @@ export default function Auth() {
     } else {
       // --- INICIO DE SESIÓN (LOGIN) como ADMIN ---
 
-      fetch('http://localhost:5000/usuarios')
+      fetch(`${import.meta.env.VITE_API_URL}/usuarios`)
           .then(res => res.json())
           .then(data => {
             const usersArray = Array.isArray(data) ? data : (data.usuarios || []);

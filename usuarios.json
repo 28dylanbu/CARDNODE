@@ -22,37 +22,24 @@
       "role": "student",
       "createdAt": "2026-06-25T17:56:59.441Z",
       "stats": {
-        "flashcardsAttempts": 48,
+        "flashcardsAttempts": 81,
         "flashcardsFailed": [
           "eat",
+          "run",
           "swim",
           "read",
           "write",
           "sing",
-          "dance"
-        ],
-        "constructorAttempts": 0,
-        "constructorFailed": []
-      }
-    },
-    {
-      "id": "3jmb3ct2Qj0",
-      "name": "xd",
-      "email": "papugod@gmail.com",
-      "password": "123456",
-      "role": "student",
-      "createdAt": "2026-06-25T18:22:19.680Z",
-      "stats": {
-        "flashcardsAttempts": 16,
-        "flashcardsFailed": [
-          "run",
-          "swim",
-          "read",
-          "sing",
+          "dance",
           "play",
           "cook",
           "study",
-          "sleep"
+          "jump",
+          "sleep",
+          "walk",
+          "drive",
+          "teach",
+          "listen"
         ],
         "constructorAttempts": 0,
         "constructorFailed": []
@@ -60,13 +47,13 @@
     },
     {
       "id": "Q9zl5sFhIaY",
-      "name": "Mypupy",
-      "email": "admin@english.com",
-      "password": "elDylancito",
+      "name": "Jose",
+      "email": "jose@english.com",
+      "password": "123456",
       "role": "student",
       "createdAt": "2026-06-25T18:53:57.593Z",
       "stats": {
-        "flashcardsAttempts": 0,
+        "flashcardsAttempts": 16,
         "flashcardsFailed": [],
         "constructorAttempts": 0,
         "constructorFailed": []

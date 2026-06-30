@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "dev": "vite",
-    "data": "json-server --watch usuarios.json --port 5000"
+    "dev": "vite --host",
+    "data": "json-server --watch usuarios.json --port 5000 --host 0.0.0.0"
   },
   "dependencies": {
     "@popperjs/core": "2.11.8",

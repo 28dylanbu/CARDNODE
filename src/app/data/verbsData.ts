@@ -11,7 +11,7 @@ export interface Verb {
   exampleFuture: string[];
 }
 
-export const verbs: Verb[] = [
+const defaultVerbs: Verb[] = [
   {
     id: 1,
     infinitive: 'eat',
@@ -189,6 +189,85 @@ export const verbs: Verb[] = [
     exampleFuture: ['We', 'will', 'listen', 'later'],
   },
 ];
+// --- LÓGICA DE VERBOS PERSONALIZADOS, EDITADOS Y ELIMINADOS ---
+
+const getCustomVerbs = (): Verb[] => {
+  const stored = localStorage.getItem('custom_verbs');
+  return stored ? JSON.parse(stored) : [];
+};
+
+const getDeletedVerbIds = (): number[] => {
+  const stored = localStorage.getItem('deleted_verbs');
+  return stored ? JSON.parse(stored) : [];
+};
+
+// 1. LA FUSIÓN REPARADA: Maneja ediciones sin enviar nada a la papelera por error
+export const verbs: Verb[] = (() => {
+  const deletedIds = getDeletedVerbIds();
+  const customVerbs = getCustomVerbs();
+
+  // Iniciamos con los originales que NO han sido borrados
+  let merged = defaultVerbs.filter(v => !deletedIds.includes(v.id));
+
+  // Mezclamos los personalizados
+  customVerbs.forEach(customVerb => {
+    // Solo procesamos si no está en la papelera
+    if (!deletedIds.includes(customVerb.id)) {
+      const index = merged.findIndex(v => v.id === customVerb.id);
+      if (index !== -1) {
+        merged[index] = customVerb; // Sobrescribe el original (Edición)
+      } else {
+        merged.push(customVerb); // Añade el nuevo (Creación)
+      }
+    }
+  });
+
+  return merged;
+})();
+
+// 2. AÑADIR REPARADO: Anti-reciclaje de IDs
+export const saveNewVerb = (newVerbData: Omit<Verb, 'id'>) => {
+  const customVerbs = getCustomVerbs();
+  const deletedIds = getDeletedVerbIds();
+
+  // Calculamos el ID más alto histórico para NUNCA reciclar un ID borrado
+  const maxDefault = defaultVerbs.reduce((max, v) => (v.id > max ? v.id : max), 0);
+  const maxCustom = customVerbs.reduce((max, v) => (v.id > max ? v.id : max), 0);
+  const maxDeleted = deletedIds.reduce((max, id) => (id > max ? id : max), 0);
+
+  const absoluteMaxId = Math.max(maxDefault, maxCustom, maxDeleted);
+
+  const verbToSave: Verb = {
+    ...newVerbData,
+    id: absoluteMaxId + 1, // Le da un ID totalmente virgen
+  };
+
+  customVerbs.push(verbToSave);
+  localStorage.setItem('custom_verbs', JSON.stringify(customVerbs));
+};
+
+// 3. EDITAR REPARADO: Ya no llama a "deleteVerb" por error
+export const updateVerb = (id: number, updatedVerbData: Omit<Verb, 'id'>) => {
+  const customVerbs = getCustomVerbs();
+  const existingIndex = customVerbs.findIndex(v => v.id === id);
+
+  if (existingIndex !== -1) {
+    customVerbs[existingIndex] = { ...updatedVerbData, id };
+  } else {
+    customVerbs.push({ ...updatedVerbData, id });
+  }
+
+  localStorage.setItem('custom_verbs', JSON.stringify(customVerbs));
+};
+
+// 4. ELIMINAR INTACTO
+export const deleteVerb = (id: number) => {
+  const deletedIds = getDeletedVerbIds();
+  if (!deletedIds.includes(id)) {
+    deletedIds.push(id);
+    localStorage.setItem('deleted_verbs', JSON.stringify(deletedIds));
+  }
+};
 
 // Progress tracking
 export interface VerbProgress {

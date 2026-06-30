@@ -55,7 +55,7 @@ export default function Landing() {
             Master English with
             <br />
             <span className="bg-gradient-to-r from-[#6FCF97] to-[#56CCF2] bg-clip-text text-transparent">
-              AI-Powered Flashcards
+              Interactive Flashcards xd
             </span>
           </h1>
 
@@ -129,7 +129,7 @@ export default function Landing() {
               </div>
               <h3 className="mb-3">Smart Spaced Repetition</h3>
               <p className="text-gray-400 leading-relaxed">
-                Our AI-powered algorithm optimizes review timing based on your performance,
+                Our powered algorithm optimizes review timing based on your performance,
                 ensuring maximum retention with minimal effort.
               </p>
             </div>

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { Shield, Edit, Plus, LogOut, User, BookOpen, Search, Activity, Calendar } from 'lucide-react';
+import { Shield, Edit, Plus, LogOut, User, Trash2, BookOpen, Search, Activity } from 'lucide-react';
 import { getCurrentUser, logout } from '../utils/auth';
-import { verbs } from '../data/verbsData';
+import { verbs, deleteVerb } from '../data/verbsData';
 
 export default function AdminPanel() {
   const navigate = useNavigate();
@@ -10,10 +10,16 @@ export default function AdminPanel() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<'verbs' | 'users'>('verbs');
   const [usersList, setUsersList] = useState<any[]>([]);
-
+  const handleDeleteVerb = (id: number, infinitive: string) => {
+    const confirmDelete = window.confirm(`¿Estás seguro de que deseas eliminar el verbo "${infinitive}"?`);
+    if (confirmDelete) {
+      deleteVerb(id);
+      window.location.reload(); // Recarga la página para actualizar la lista híbrida
+    }
+  };
   useEffect(() => {
     if (activeTab === 'users') {
-      fetch('http://localhost:5000/usuarios')
+      fetch(`${import.meta.env.VITE_API_URL}/usuarios`)
           .then(res => res.json())
           .then(data => {
             const userArray = Array.isArray(data) ? data : (data.usuarios || []);
@@ -34,9 +40,7 @@ export default function AdminPanel() {
   };
 
   const filteredVerbs = verbs.filter(
-      (verb) =>
-          verb.infinitive.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 ||
-          verb.spanish.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+      (verb) => verb.infinitive.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -108,9 +112,19 @@ export default function AdminPanel() {
                           <div className="w-24 h-24 rounded-xl overflow-hidden border-2 border-white/10"><img src={verb.imageUrl} alt={verb.infinitive} className="w-full h-full object-cover" /></div>
                           <div className="flex-1">
                             <h3 className="text-2xl font-black text-white">{verb.infinitive}</h3>
-                            <p className="text-gray-400">Spanish: {verb.spanish}</p>
                           </div>
-                          <button onClick={() => navigate(`/admin/verb/${verb.id}`)} className="bg-blue-500 text-white font-bold px-6 py-3 rounded-xl group-hover:scale-105 transition-all"><Edit className="w-4 h-4" /> Edit</button>
+                          <button
+                              onClick={() => navigate(`/admin/verb/${verb.id}`)}
+                              className="bg-blue-500 text-white font-bold px-6 py-2 rounded-xl hover:bg-blue-600 transition-all flex items-center justify-center gap-2"
+                          >
+                            <Edit className="w-4 h-4" /> Edit
+                          </button>
+                          <button
+                              onClick={() => handleDeleteVerb(verb.id, verb.infinitive)}
+                              className="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white font-bold px-6 py-2 rounded-xl transition-all flex items-center justify-center gap-2"
+                          >
+                            <Trash2 className="w-4 h-4" /> Delete
+                          </button>
                         </div>
                     ))}
                   </div>
